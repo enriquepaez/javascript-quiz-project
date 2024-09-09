@@ -60,12 +60,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /************  TIMER  ************/
 
-  let timer;
+    let timer = setInterval(() => {
+      quiz.timeRemaining--;
+  
+      timeRemainingContainer.innerText =
+        `${Math.floor(quiz.timeRemaining / 60).toString().padStart(2, "0")}:${(quiz.timeRemaining % 60).toString().padStart(2, "0")}`;
+      
+      if (quiz.timeRemaining <= 0) {
+        clearInterval(timer);
+        showResults();
+      }
+  
+    }, 1000);
 
 
   /************  EVENT LISTENERS  ************/
 
   nextButton.addEventListener("click", nextButtonHandler);
+
   restartButton.addEventListener("click", () => {
     quizView.style.display = "block";
     endView.style.display = "none";
@@ -73,6 +85,23 @@ document.addEventListener("DOMContentLoaded", () => {
     quiz.currentQuestionIndex = 0;
     quiz.correctAnswers = 0;
     quiz.shuffleQuestions();
+  
+    quiz.timeRemaining = quizDuration;
+    timeRemainingContainer.innerText =
+        `${Math.floor(quiz.timeRemaining / 60).toString().padStart(2, "0")}:${(quiz.timeRemaining % 60).toString().padStart(2, "0")}`;
+
+    timer = setInterval(() => {
+      quiz.timeRemaining--;
+      timeRemainingContainer.innerText =
+        `${Math.floor(quiz.timeRemaining / 60).toString().padStart(2, "0")}:${(quiz.timeRemaining % 60).toString().padStart(2, "0")}`;
+      
+      if (quiz.timeRemaining <= 0) {
+        clearInterval(timer);
+        showResults();
+      }
+
+    }, 1000);
+
     showQuestion();
   });
 
@@ -194,6 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showResults() {
 
     // YOUR CODE HERE:
+    clearInterval(timer);
     //
     // 1. Hide the quiz view (div#quizView)
     quizView.style.display = "none";
